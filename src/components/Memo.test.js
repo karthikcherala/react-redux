@@ -1,5 +1,5 @@
 import {render, screen} from "@testing-library/react";
-import Memo from "./Memos";
+import Memo from "./Memo";
 test('should show title, date, description, and complete', () => {
     const title = 'Test Title';
     const date = new Date();
