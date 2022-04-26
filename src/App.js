@@ -1,7 +1,7 @@
 import "./App.css";
 import {useState} from "react";
 import Login from "./components/Login";
-import Counter from "./components/Counter";
+import Memos from "./components/Memos";
 //All functional react components are rendered functions
 //This function is called every time we want to render our application
 //Each FRC must return a single tag/element
@@ -12,21 +12,28 @@ import Counter from "./components/Counter";
 //c.description(the actual memo)
 //d.complete/not complete
 //3.Authenticate the user
-export function App({loggedInInit = false, _Login = Login, _Counter = Counter}) {
+ function App({loggedInInit = false, _Login = Login, _Memos = Memos}) {
 
 
     //useState returns an array with 2 elements
     //1st element is the current value
     //the second element is a function that we can call to update the value
-    const [count, setCount] = useState(0)
+    const [memos, setMemos] = useState([
+        {id: 0, title: 'Title1', date: new Date(), description: 'Desc1', complete: false},
+        {id: 1, title: 'Title2', date: new Date(), description: 'Desc2', complete: true},
+        {id: 2, title: 'Title3', date: new Date(), description: 'Desc3', complete: true}
+    ])
     const [isLoggedIn, setIsLoggedIn] = useState(loggedInInit)
 
-    function handleClick() {
-
-        setCount(count + 1)
+//In order to delete we need to remove an element from our memos state
+// we need to rerender
+     //Take some identifier and use that Id to delete the memo
+    function deleteMemo(memoId) {
+        const newMemos = memos.filter(memo => memo.id !== memoId);
+        setMemos(newMemos);
     }
 
-    function handleLogin(credentials) {
+     function handleLogin(credentials) {
 
 
         if (credentials.username === 'ubatta'
@@ -35,7 +42,7 @@ export function App({loggedInInit = false, _Login = Login, _Counter = Counter}) 
     }
 
     if (isLoggedIn)
-        return <_Counter number={count} onIncrement={handleClick}/>
+        return <_Memos memos={memos} onDelete={deleteMemo}/>
 
     else
         return <_Login onLogin={handleLogin}/>
