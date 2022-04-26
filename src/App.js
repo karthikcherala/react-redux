@@ -45,8 +45,10 @@ import Memos from "./components/Memos";
         return <_Memos memos={memos} onDelete={deleteMemo}/>
 
     else
-        return <_Login onLogin={handleLogin}/>
-
+        // return <_Login onLogin={handleLogin}/>
+    return <div className={'mt-3'}>
+     <_Login onLogin={handleLogin}/>
+    </div>
 }
 
 export default App;
