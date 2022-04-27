@@ -12,7 +12,7 @@ test('should show username and password inputs', () => {
 });
 test('should show login button', () => {
   render(<Login />);
-  const loginButton = screen.getByText(/Login/);
+  const loginButton = screen.getByText(/Submit/);
   expect(loginButton).toBeInTheDocument();
 });
 

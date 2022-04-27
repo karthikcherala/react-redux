@@ -46,7 +46,7 @@ import Memos from "./components/Memos";
 
     else
         // return <_Login onLogin={handleLogin}/>
-    return <div className={'mt-3'}>
+    return <div className={'d-flex justify-content-center'}>
      <_Login onLogin={handleLogin}/>
     </div>
 }
