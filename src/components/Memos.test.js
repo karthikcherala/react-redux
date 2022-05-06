@@ -1,18 +1,21 @@
 import {render, screen} from "@testing-library/react";
 import Memos from "./Memos";
-test('should show 2 memos and pass onDelete to each Mock', () => {
 
-    const memoData = ['memo1','memo2']
-    let _onDelete = undefined;
+it('should show 2 memos', () => {
+    const state = {memos: ['memo1', 'memo2']}
+    const mockMemo = ({memo}) => <>{memo}</>
+    render(<Memos _useSelector={fn => fn(state)} _Memo={mockMemo}/>)
+    expect(screen.getByText(state.memos[0])).toBeInTheDocument()
+    expect(screen.getByText(state.memos[1])).toBeInTheDocument()
+})
 
-    const mockMemo = ({memo, onDelete}) => {
-        _onDelete = onDelete
-        return<div>{memo}</div>
-    }
-
-    render(<Memos memos={memoData} _Memo={mockMemo} onDelete={()=>{}}/>)
-    expect(screen.getByText('memo1')).toBeInTheDocument();
-    expect(screen.getByText('memo2')).toBeInTheDocument();
-    expect(typeof _onDelete).toBe('function');
-
+it('should show AddMemo at the beginning when adding a memo', () => {
+    const state = {memos: ['memo1', 'memo2'], memoToAdd: '?'}
+    const mockMemo = ({memo}) => <div>{memo}</div>
+    const addMemoText = 'Add Memo?'
+    const mockAddMemo = () => <div>{addMemoText}</div>
+    render(<Memos _useSelector={fn => fn(state)} _Memo={mockMemo} _AddMemo={mockAddMemo}/>)
+    expect(screen.getByText(addMemoText)).toBeInTheDocument()
+    expect(screen.getByText(state.memos[0])).toBeInTheDocument()
+    expect(screen.getByText(state.memos[1])).toBeInTheDocument()
 })

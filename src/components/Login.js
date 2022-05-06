@@ -1,48 +1,55 @@
-//First parameter is an object containing
-// all properties that are passed into this component
+// First parameter is an object containing all
+//    properties that are passed into this
+//    component
 import {useState} from "react";
-import '../styles.css'
-import {Button, Card, Form, Row} from "react-bootstrap";
-function Login(properties) {
-   const[username, setUsername] = useState('');
-   const[password, setPassword] = useState('');
+import {Button, Card, Form, InputGroup, Row} from "react-bootstrap";
+import {useDispatch} from "react-redux";
+import {LOGIN} from "../modules/memos";
+import {BsLock, BsPerson} from "react-icons/bs";
 
-    function sendCredentials(){
-        properties.onLogin({username, password})
+function Login({_useDispatch = useDispatch}) {
+    const dispatch = _useDispatch()
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [submitted, setSubmitted] = useState(false)
+
+    function sendCredentials() {
+        dispatch({type: LOGIN, credentials: {username, password}})
     }
-    function onUsernameChange(event){
-        console.log(event.target.value);
-        setUsername(event.target.value);
+
+    function onUsernameChange(event) {
+        setUsername(event.target.value)
     }
-    function onPasswordChange(event){
-        console.log(event.target.value);
-        setPassword(event.target.value);
+
+    function onPasswordChange(event) {
+        setPassword(event.target.value)
     }
-  function handleSubmit(event) {
+
+    function handleSubmit(event) {
         event.preventDefault();
+        setSubmitted(true)
         sendCredentials();
-  }
-    // return <>
-    // <input type='text' placeholder='Username' onChange={onUsernameChange}/>
-    //     <input type='text' placeholder='Password' onChange={onPasswordChange}/>
-    //     <Button variant={'primary'} onClick={sendCredentials}>Login</Button>
-    // </>
-    return <Card>
-        <Card.Header className={'text-center'}><h3>Login</h3></Card.Header>
+    }
+
+    return <Card style={{borderWidth: 0}}>
         <Card.Body>
-    <Form onSubmit={handleSubmit}>
-        <Form.Group className={'m-1'}>
-            <Form.Label>Username</Form.Label>
-            <Form.Control type='text' placeholder='Username' onChange={onUsernameChange}/>
-        </Form.Group>
-        <Form.Group className={'m-1'}>
-            <Form.Label>Password</Form.Label>
-            <Form.Control type='Password' placeholder='Password' onChange={onPasswordChange}/>
-        </Form.Group>
-        <Row className={'p-3'}>
-        <Button type={'submit'}variant={'primary'}>Submit</Button>
-        </Row>
-    </Form>
+            <Form onSubmit={handleSubmit}>
+                <InputGroup className="mb-2">
+                    <InputGroup.Text><BsPerson/></InputGroup.Text>
+                    <Form.Control type='text' placeholder="Username" onChange={onUsernameChange}
+                                  isInvalid={submitted && !username}/>
+                </InputGroup>
+
+                <InputGroup className="mb-2">
+                    <InputGroup.Text><BsLock/></InputGroup.Text>
+                    <Form.Control type='password' placeholder="Password" onChange={onPasswordChange}
+                                  isInvalid={submitted && !password}/>
+                </InputGroup>
+
+                <Row className={'p-3'}>
+                    <Button type={'submit'} variant={"primary"}>Login</Button>
+                </Row>
+            </Form>
         </Card.Body>
     </Card>
 }

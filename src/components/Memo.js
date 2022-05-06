@@ -1,26 +1,45 @@
-import Login from "./Login";
-import {Badge, Button, Card} from "react-bootstrap";
+import {Button, Card, Col, Row} from "react-bootstrap";
+import {useDispatch, useSelector} from "react-redux";
+import {DELETE_MEMO, EDIT_MEMO} from "../modules/memos";
+import {BsCheck, BsExclamation, BsPencil, BsTrash} from 'react-icons/bs'
+import EditMemo from "./EditMemo";
 
+export default function Memo({
+                                 memo, _useDispatch = useDispatch, _useSelector = useSelector,
+                                 _EditMemo = EditMemo
+                             }) {
+    const dispatch = _useDispatch()
+    const editID = _useSelector(state => state.memoToEdit?.id)
+    const {id, date, description, complete} = memo
 
-export default function Memo({memo, onDelete}) {
-    const {id, title, date, description, complete} = memo;
-    return <Card>
+    const StaticMemo = () => <Card>
         <Card.Header>
-            <h3 className={'d-flex justify-content-between'}>
-                {title}
-                <span>{date.toDateString()}</span>
-            </h3>
+            <Row className='align-items-center'>
+                <Col xs='auto'>{complete ?
+                    <BsCheck title='Complete' size={20}/> :
+                    <BsExclamation title='Complete' size={20}/>}
+                </Col>
+                <Col>{date.toDateString()}</Col>
+                <Col xs='auto'>
+                    <Button title='Edit' variant={"outline-secondary"} size='sm'
+                            onClick={() => dispatch({type: EDIT_MEMO, memo})}>
+                        <BsPencil/>
+                    </Button>
+                </Col>
+                <Col xs='auto'>
+                    <Button title='Delete' variant={"outline-danger"} size='sm'
+                            onClick={() => dispatch({type: DELETE_MEMO, id})}>
+                        <BsTrash/>
+                    </Button>
+                </Col>
+            </Row>
         </Card.Header>
-        <Card.Body>
-        <h5>{description}</h5>
-        </Card.Body>
-        <Card.Footer>
-            <div className={'d-flex justify-content-between'}>
-                <Button variant={"outline-danger"} onClick={() => onDelete(id)}>Delete</Button>
-                <Badge bg={complete ? 'secondary' : 'success'} className={'d-flex flex-column justify-content-center w-25'}>
-                {complete ? 'Complete' :'To Do'}
-                </Badge>
-            </div>
-        </Card.Footer>
+
+        <Card.Body>{description}</Card.Body>
     </Card>
+
+    if (id === editID)
+        return <_EditMemo/>
+    else
+        return StaticMemo()
 }
