@@ -10,6 +10,8 @@ export const DELETE_MEMO = 'memos/DELETE_MEMO'
 export const EDIT_MEMO = 'memos/EDIT_MEMO'
 export const APPLY_EDIT_MEMO = 'memos/APPLY_EDIT_MEMO'
 export const CANCEL_EDIT_MEMO = 'memos/CANCEL_EDIT_MEMO'
+export const SEND_PRIVATE_MESSAGE = 'memos/SEND_PRIVATE_MESSAGE'
+export const ADD_PRIVATE_MESSAGE = 'memos/ADD_PRIVATE_MESSAGE'
 
 // a reducer is a function that transitions the current state
 //    to the next, given an action
@@ -23,16 +25,21 @@ const initialState = {
     isLoggedIn: false,
     memos: [],
     memoToEdit: null,
-    memoToAdd: null
+    memoToAdd: null,
+    username:null,
+    messageToSend: null,
+    privatemessages: []
 }
+
+const users = [{username: 'ubatta', password: 'mypass'}, {username: 'testuser', password: 'testpass'}]
 
 export default function reducer(state = initialState, action) {
     switch (action?.type) {
         case LOGIN:
             return {
                 ...state,
-                isLoggedIn: action.credentials.username === 'ubatta' &&
-                    action.credentials.password === 'mypass'
+                isLoggedIn: users.filter(user => user.username === action.credentials.username && user.password === action.credentials.password).length > 0,
+                username: action.credentials.username
             }
 
         case LOGOUT:
@@ -86,7 +93,17 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 memoToEdit: null
             }
-
+        case SEND_PRIVATE_MESSAGE:
+            return {
+                ...state,
+                privatemessages: [...state.privatemessages, {...action.privateMessage}],
+                messageToSend: null
+            }
+        case ADD_PRIVATE_MESSAGE:
+            return {
+                ...state,
+                messageToSend: {description: '', fromuser: state.username, touser: ''}
+            }
         default:
             return state
     }
